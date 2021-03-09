@@ -70,7 +70,7 @@ def rand_permutation(data_A, data_B, n, R):
     for x in range(0, R):
         temp_A = data_A
         temp_B = data_B
-        samples = [np.random.randint(1, 3) for i in xrange(n)] #which samples to swap without repetitions
+        samples = [np.random.randint(1, 3) for i in range(n)] #which samples to swap without repetitions
         swap_ind = [i for i, val in enumerate(samples) if val == 1]
         for ind in swap_ind:
             temp_B[ind], temp_A[ind] = temp_A[ind], temp_B[ind]
@@ -97,7 +97,7 @@ def Bootstrap(data_A, data_B, n, R):
             temp_A.append(data_A[samp])
             temp_B.append(data_B[samp])
         delta = float(sum([x - y for x, y in zip(temp_A, temp_B)])) / n
-        if (delta < 2*delta_orig):
+        if (delta > 2*delta_orig):
             r = r + 1
     pval = float(r)/(R)
     return pval
@@ -124,14 +124,14 @@ def main():
     data_B = list(map(float,data_B))
 
     print("\nPossible statistical tests: Shapiro-Wilk, Anderson-Darling, Kolmogorov-Smirnov, t-test, Wilcoxon, McNemar, Permutation, Bootstrap")
-    name = raw_input("\nEnter name of statistical test: ")
+    name = input("\nEnter name of statistical test: ")
 
     ### Normality Check
     if(name=="Shapiro-Wilk" or name=="Anderson-Darling" or name=="Kolmogorov-Smirnov"):
         output = normality_check(data_A, data_B, name, alpha)
 
         if(float(output)>float(alpha)):
-            answer = raw_input("\nThe normal test is significant, would you like to perform a t-test for checking significance of difference between results? (Y\N) ")
+            answer = input("\nThe normal test is significant, would you like to perform a t-test for checking significance of difference between results? (Y\N) ")
             if(answer=='Y'):
                 # two sided t-test
                 t_results = stats.ttest_rel(data_A, data_B)
@@ -144,14 +144,14 @@ def main():
                     print("\nTest result is not significant with p-value: {}".format(pval))
                     return
             else:
-                answer2 = raw_input("\nWould you like to perform a different test (permutation or bootstrap)? If so enter name of test, otherwise type 'N' ")
+                answer2 = input("\nWould you like to perform a different test (permutation or bootstrap)? If so enter name of test, otherwise type 'N' ")
                 if(answer2=='N'):
                     print("\nbye-bye")
                     return
                 else:
                     name = answer2
         else:
-            answer = raw_input("\nThe normal test is not significant, would you like to perform a non-parametric test for checking significance of difference between results? (Y\N) ")
+            answer = input("\nThe normal test is not significant, would you like to perform a non-parametric test for checking significance of difference between results? (Y\N) ")
             if (answer == 'Y'):
                 answer2 = raw_input("\nWhich test (Permutation or Bootstrap)? ")
                 name = answer2
